@@ -279,7 +279,7 @@
        Texto apilado en vertical, escritura de arriba a abajo  */
     #fecha-vertical {
       position: absolute;
-      top: 19%;
+      top: calc(19% - 4mm);
       left: 10px;
       z-index: 40;
       display: flex;
@@ -288,7 +288,7 @@
       gap: 8px;
       padding: 14px 12px;
       border-radius: 20px;
-      width: 96px;
+      width: 88px;
       opacity: 0;
       pointer-events: none;
       transform: translateX(-20px);
@@ -677,14 +677,18 @@
 
     videoAnim.play().catch(() => {});
 
-    // Show UI slightly before animation ends (at ~7s into 10s video)
+    // Mostrar overlay y botón al mismo tiempo (~6.5s)
     setTimeout(() => {
       uiOverlay.classList.add('visible');
       btnUbicacion.classList.add('visible');
-      fechaVertical.classList.add('visible');
       updateCountdown();
       setInterval(updateCountdown, 1000);
     }, 6500);
+
+    // Fecha y hora aparece con 7 segundos de delay
+    setTimeout(() => {
+      fechaVertical.classList.add('visible');
+    }, 7000);
   }
 
   /* ─── Preload videos ─── */
