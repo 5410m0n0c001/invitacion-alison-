@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#f9a8d4" />
+
+  <!-- ── SEO ── -->
+  <title>¡Alison cumple 2 años! 🐝</title>
+  <meta name="description" content="Cumpleaños de Alison 🐝 — ¡Estás invitado a celebrar este día tan especial!" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- ── Open Graph (WhatsApp, Facebook, Telegram…) ── -->
+  <meta property="og:type"         content="website" />
+  <meta property="og:title"        content="🐝 Cumpleaños de Alison 🎉" />
+  <meta property="og:description"  content="Cumpleaños de Alison — ¡Estás invitado a celebrar este día tan especial! Toca para abrir tu invitación." />
+  <meta property="og:image"        content="https://5410m0n0c001.github.io/invitacion-alison-/assets/imagen.png" />
+  <meta property="og:image:width"  content="1500" />
+  <meta property="og:image:height" content="788" />
+  <meta property="og:image:alt"    content="Invitación de cumpleaños de Alison" />
+  <meta property="og:url"          content="https://5410m0n0c001.github.io/invitacion-alison-/" />
+  <meta property="og:locale"       content="es_MX" />
+  <meta property="og:site_name"    content="Cumpleaños de Alison" />
+
+  <!-- ── Twitter Card ── -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="🐝 Cumpleaños de Alison 🎉" />
+  <meta name="twitter:description" content="Cumpleaños de Alison — ¡Estás invitado a celebrar este día tan especial!" />
+  <meta name="twitter:image"       content="https://5410m0n0c001.github.io/invitacion-alison-/assets/imagen.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Quicksand:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── RESET & BASE ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink:      #f472b6;
+      --pink-dark: #db2777;
+      --yellow:    #fbbf24;
+      --purple:    #a855f7;
+      --sky:       #38bdf8;
+      --white:     #ffffff;
+      --shadow:    rgba(0,0,0,0.25);
+    }
+
+    html, body {
+      height: 100%;
+      background: #1a0a2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Quicksand', sans-serif;
+      overflow: hidden;
+    }
+
+    /* ── STAGE: vertical phone-like viewport ── */
+    #stage {
+      position: relative;
+      width: 100vw;
+      max-width: 440px;
+      height: 100vh;
+      max-height: 780px;
+      overflow: hidden;
+      border-radius: 0;
+      box-shadow: 0 0 60px rgba(244,114,182,0.4);
+      background: #000;
+    }
+
+    /* ── SCREEN LAYERS ── */
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ═══════════════════════════════
+       SCREEN 1 — SOBRE ESTÁTICO
+    ═══════════════════════════════ */
+    #screen-poster {
+      cursor: pointer;
+      z-index: 10;
+      background: #fffbeb;
+      transition: opacity 0.5s ease;
+    }
+
+    #screen-poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Tap hint shimmer */
+    .tap-hint {
+      position: absolute;
+      bottom: 52px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.92);
+      color: var(--pink-dark);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 1rem;
+      padding: 10px 28px;
+      border-radius: 50px;
+      box-shadow: 0 4px 20px rgba(244,114,182,0.5);
+      white-space: nowrap;
+      animation: pulse-hint 1.6s ease-in-out infinite;
+      z-index: 20;
+    }
+
+    @keyframes pulse-hint {
+      0%, 100% { transform: translateX(-50%) scale(1);   box-shadow: 0 4px 20px rgba(244,114,182,0.5); }
+      50%       { transform: translateX(-50%) scale(1.06); box-shadow: 0 6px 28px rgba(244,114,182,0.8); }
+    }
+
+    /* ═══════════════════════════════
+       SCREEN 2 — VIDEO SOBRE (apertura)
+    ═══════════════════════════════ */
+    #screen-sobre {
+      z-index: 5;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      background: #fffbeb;
+    }
+
+    #screen-sobre.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #video-sobre {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ═══════════════════════════════
+       SCREEN 3 — ANIMACIÓN INVITACIÓN
+    ═══════════════════════════════ */
+    #screen-anim {
+      z-index: 4;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+      background: #87ceeb;
+    }
+
+    #screen-anim.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #video-anim {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ═══════════════════════════════
+       UI OVERLAY — aparece sobre video-anim
+    ═══════════════════════════════ */
+
+    /* Botón flotante de ubicación — esquina superior derecha, fijo dentro del stage */
+    #btn-ubicacion {
+      position: absolute;
+      top: 18px;
+      right: 14px;
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(145deg, var(--pink) 0%, var(--pink-dark) 100%);
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 0.58rem;
+      text-align: center;
+      line-height: 1.2;
+      border-radius: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(219,39,119,0.65), 0 0 0 3px rgba(255,255,255,0.25);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: transform 0.15s, box-shadow 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #btn-ubicacion.visible {
+      opacity: 1;
+      pointer-events: all;
+      animation: btn-pop 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+
+    @keyframes btn-pop {
+      from { transform: scale(0.5); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    #btn-ubicacion:active {
+      transform: scale(0.93);
+      box-shadow: 0 2px 10px rgba(219,39,119,0.4);
+    }
+
+    #btn-ubicacion svg { flex-shrink: 0; }
+    #btn-ubicacion span { display: block; }
+
+    /* Panel inferior: fecha + contador */
+    #ui-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 30;
+      /* env(safe-area-inset-bottom) cubre la barra de navegación en iOS/Android */
+      padding: 14px 14px calc(20px + env(safe-area-inset-bottom, 0px));
+      background: linear-gradient(to top, rgba(20,4,50,0.90) 0%, rgba(20,4,50,0.0) 100%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease 0.3s;
+    }
+
+    #ui-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* ── Event date header ── */
+    #event-date-header {
+      text-align: center;
+      line-height: 1.35;
+    }
+
+    #event-date-header .ed-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 0.78rem;
+      color: var(--yellow);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    #event-date-header .ed-date {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 1.25rem;
+      color: #fff;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+      display: block;
+    }
+
+    #event-date-header .ed-time {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--pink);
+      display: block;
+      margin-top: 2px;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    }
+
+    #event-date-header .ed-divider {
+      display: block;
+      width: 56px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--yellow), transparent);
+      margin: 6px auto 4px;
+      border-radius: 2px;
+    }
+
+    /* ── Countdown sublabel ── */
+    #cd-label-top {
+      text-align: center;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: -2px;
+    }
+
+    /* ── Countdown ── */
+    #countdown-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+
+    .cd-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 12px;
+      padding: 7px 12px;
+      min-width: 58px;
+      backdrop-filter: blur(8px);
+    }
+
+    .cd-num {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 1.85rem;
+      color: var(--yellow);
+      line-height: 1;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+    }
+
+    .cd-label {
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.9);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 3px;
+    }
+
+    .cd-sep {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 1.6rem;
+      color: var(--pink);
+      margin-bottom: 12px;
+      animation: blink-sep 1s step-end infinite;
+    }
+
+    @keyframes blink-sep {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.2; }
+    }
+
+    /* ── Celebration ended message ── */
+    #msg-finished {
+      display: none;
+      text-align: center;
+      padding: 8px;
+    }
+
+    #msg-finished p {
+      color: var(--yellow);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 1.05rem;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+
+    /* ── Sparkle confetti ── */
+    .sparkle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: sparkle-float 2.5s ease-in-out infinite;
+    }
+
+    @keyframes sparkle-float {
+      0%   { transform: translateY(0) scale(1);   opacity: 0.8; }
+      50%  { transform: translateY(-12px) scale(1.3); opacity: 1; }
+      100% { transform: translateY(0) scale(1);   opacity: 0.8; }
+    }
+
+    /* ── Responsive on small phones ── */
+    @media (max-height: 640px) {
+      .cd-num   { font-size: 1.4rem; }
+      .cd-block { padding: 5px 9px; min-width: 48px; }
+      #event-date-header .ed-date { font-size: 1.05rem; }
+      #event-date-header .ed-time { font-size: 0.85rem; }
+      #btn-ubicacion { width: 62px; height: 62px; top: 12px; right: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="stage">
+
+  <!-- ════ SCREEN 1: Sobre estático ════ -->
+  <div id="screen-poster">
+    <img src="assets/sobre-poster.jpg" alt="Invitación de Alison" />
+    <div class="tap-hint">✉️ Toca para abrir tu invitación</div>
+  </div>
+
+  <!-- ════ SCREEN 2: Video del sobre (apertura) ════ -->
+  <div id="screen-sobre" class="screen">
+    <video id="video-sobre" playsinline webkit-playsinline>
+      <source src="assets/sobre.mp4" type="video/mp4" />
+    </video>
+  </div>
+
+  <!-- ════ SCREEN 3: Animación invitación ════ -->
+  <div id="screen-anim" class="screen">
+    <video id="video-anim" playsinline webkit-playsinline loop>
+      <source src="assets/animacion.mp4" type="video/mp4" />
+    </video>
+
+    <!-- Botón flotante ubicación — esquina superior derecha -->
+    <a id="btn-ubicacion"
+       href="https://share.google/217zwY3bvhmzM4k7h"
+       target="_blank"
+       rel="noopener noreferrer">
+      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/>
+      </svg>
+      <span>Ver<br>ubicación</span>
+    </a>
+
+    <!-- Panel inferior: fecha + contador -->
+    <div id="ui-overlay">
+
+      <!-- Fecha y hora del evento -->
+      <div id="event-date-header">
+        <span class="ed-title">🐝 La fiesta es el</span>
+        <span class="ed-date">Domingo 5 de Julio de 2026</span>
+        <span class="ed-time">🕒 3:00 PM · Fracc. Los Encinos</span>
+        <span class="ed-divider"></span>
+      </div>
+
+      <!-- Contador regresivo -->
+      <p id="cd-label-top">⏳ faltan...</p>
+      <div id="countdown-wrap">
+        <div class="cd-block">
+          <span class="cd-num" id="cd-days">00</span>
+          <span class="cd-label">días</span>
+        </div>
+        <div class="cd-sep">:</div>
+        <div class="cd-block">
+          <span class="cd-num" id="cd-hours">00</span>
+          <span class="cd-label">horas</span>
+        </div>
+        <div class="cd-sep">:</div>
+        <div class="cd-block">
+          <span class="cd-num" id="cd-mins">00</span>
+          <span class="cd-label">min</span>
+        </div>
+        <div class="cd-sep">:</div>
+        <div class="cd-block">
+          <span class="cd-num" id="cd-secs">00</span>
+          <span class="cd-label">seg</span>
+        </div>
+      </div>
+
+      <!-- Mensaje post-evento -->
+      <div id="msg-finished">
+        <p>🐝 ¡Gracias por celebrar con Alison! 🎉</p>
+      </div>
+
+    </div><!-- /ui-overlay -->
+
+  </div><!-- /screen-anim -->
+
+</div><!-- /stage -->
+
+<script>
+  /* ─── CONFIG ─── */
+  // Fecha y hora del evento: 5 de julio de 2025 a las 15:00 hrs (Veracruz / Ciudad de México)
+  const EVENT_DATE = new Date('2026-07-05T15:00:00-06:00');
+
+  /* ─── DOM ─── */
+  const screenPoster = document.getElementById('screen-poster');
+  const screenSobre  = document.getElementById('screen-sobre');
+  const screenAnim   = document.getElementById('screen-anim');
+  const videoSobre   = document.getElementById('video-sobre');
+  const videoAnim    = document.getElementById('video-anim');
+  const uiOverlay    = document.getElementById('ui-overlay');
+  const btnUbicacion = document.getElementById('btn-ubicacion');
+  const msgFinished  = document.getElementById('msg-finished');
+  const cdDays       = document.getElementById('cd-days');
+  const cdHours      = document.getElementById('cd-hours');
+  const cdMins       = document.getElementById('cd-mins');
+  const cdSecs       = document.getElementById('cd-secs');
+  const cdWrap       = document.getElementById('countdown-wrap');
+
+  /* ─── COUNTDOWN ─── */
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function updateCountdown() {
+    const now  = Date.now();
+    const diff = EVENT_DATE.getTime() - now;
+
+    if (diff <= 0) {
+      // Evento ya pasó
+      cdWrap.style.display      = 'none';
+      msgFinished.style.display = 'block';
+      const lbl = document.getElementById('cd-label-top');
+      if (lbl) lbl.style.display = 'none';
+      return;
+    }
+
+    const totalSecs = Math.floor(diff / 1000);
+    const days  = Math.floor(totalSecs / 86400);
+    const hours = Math.floor((totalSecs % 86400) / 3600);
+    const mins  = Math.floor((totalSecs % 3600) / 60);
+    const secs  = totalSecs % 60;
+
+    cdDays.textContent  = pad(days);
+    cdHours.textContent = pad(hours);
+    cdMins.textContent  = pad(mins);
+    cdSecs.textContent  = pad(secs);
+  }
+
+  /* ─── FLOW ─── */
+  // STEP 1: user taps poster → play sobre video
+  screenPoster.addEventListener('click', () => {
+    screenSobre.classList.add('active');
+    screenPoster.style.opacity = '0';
+    screenPoster.style.pointerEvents = 'none';
+
+    videoSobre.play().catch(() => {
+      // fallback: just transition
+      transitionToAnim();
+    });
+  });
+
+  // STEP 2: sobre video ends → fade to animation
+  videoSobre.addEventListener('ended', () => {
+    transitionToAnim();
+  });
+
+  function transitionToAnim() {
+    screenAnim.classList.add('active');
+
+    setTimeout(() => {
+      screenSobre.style.opacity = '0';
+      screenSobre.style.pointerEvents = 'none';
+    }, 400);
+
+    videoAnim.play().catch(() => {});
+
+    // Show UI slightly before animation ends (at ~7s into 10s video)
+    setTimeout(() => {
+      uiOverlay.classList.add('visible');
+      btnUbicacion.classList.add('visible');
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    }, 6500);
+  }
+
+  /* ─── Preload videos ─── */
+  videoSobre.load();
+  videoAnim.load();
+</script>
+</body>
+</html>
