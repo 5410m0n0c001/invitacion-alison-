@@ -201,14 +201,14 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 5px;
-      width: 76px;
-      height: 76px;
-      border-radius: 20px;
+      gap: 7px;
+      width: 100px;
+      height: 100px;
+      border-radius: 24px;
       color: #fff;
       font-family: 'Nunito', sans-serif;
       font-weight: 900;
-      font-size: 0.6rem;
+      font-size: 0.85rem;
       text-align: center;
       line-height: 1.25;
       text-decoration: none;
@@ -228,7 +228,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      border-radius: 20px;
+      border-radius: 24px;
       background: linear-gradient(145deg, #f472b6 0%, #db2777 100%);
       z-index: -1;
     }
@@ -271,8 +271,8 @@
       animation: none !important;
     }
 
-    #btn-ubicacion svg { flex-shrink: 0; drop-shadow: 0 1px 3px rgba(0,0,0,0.4); }
-    #btn-ubicacion .btn-txt { display: block; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+    #btn-ubicacion svg { flex-shrink: 0; width: 36px; height: 36px; drop-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+    #btn-ubicacion .btn-txt { display: block; font-size: 0.82rem; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
 
     /* ════ FECHA VERTICAL — columna izquierda ════
        Posicionada al mismo nivel que el botón (top: 19%)
@@ -285,10 +285,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
-      padding: 10px 8px;
-      border-radius: 16px;
-      width: 52px;
+      gap: 8px;
+      padding: 14px 12px;
+      border-radius: 20px;
+      width: 96px;
       opacity: 0;
       pointer-events: none;
       transform: translateX(-20px);
@@ -305,7 +305,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      border-radius: 16px;
+      border-radius: 20px;
       background: linear-gradient(180deg, rgba(219,39,119,0.75) 0%, rgba(168,85,247,0.65) 100%);
       z-index: -1;
     }
@@ -321,7 +321,7 @@
     .fv-num {
       font-family: 'Nunito', sans-serif;
       font-weight: 900;
-      font-size: 1.65rem;
+      font-size: 3.2rem;
       color: #fff;
       text-shadow: 0 2px 8px rgba(0,0,0,0.55);
       line-height: 1;
@@ -330,7 +330,7 @@
     .fv-label {
       font-family: 'Quicksand', sans-serif;
       font-weight: 700;
-      font-size: 0.5rem;
+      font-size: 0.95rem;
       color: rgba(255,255,255,0.85);
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -338,8 +338,8 @@
     }
 
     .fv-divider {
-      width: 28px;
-      height: 1.5px;
+      width: 52px;
+      height: 2px;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
       border-radius: 2px;
       flex-shrink: 0;
@@ -348,7 +348,7 @@
     .fv-hora {
       font-family: 'Nunito', sans-serif;
       font-weight: 900;
-      font-size: 1.1rem;
+      font-size: 2.1rem;
       color: var(--yellow);
       text-shadow: 0 2px 8px rgba(0,0,0,0.55);
       line-height: 1;
@@ -358,7 +358,7 @@
     .fv-hora-label {
       font-family: 'Quicksand', sans-serif;
       font-weight: 700;
-      font-size: 0.48rem;
+      font-size: 0.9rem;
       color: rgba(255,255,255,0.8);
       text-transform: uppercase;
       letter-spacing: 0.06em;
