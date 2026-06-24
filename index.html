@@ -164,72 +164,224 @@
       display: block;
     }
 
-    /* ═══════════════════════════════
-       UI OVERLAY — aparece sobre video-anim
-    ═══════════════════════════════ */
+    /* ═══════════════════════════════════════════════════
+       ELEMENTOS FLOTANTES SOBRE VIDEO-ANIM
+    ═══════════════════════════════════════════════════ */
 
-    /* Botón flotante de ubicación — esquina superior derecha, fijo dentro del stage */
+    /* ── Efecto laminado compartido (vidrio holográfico) ──
+       Se usa en el botón y en el panel de fecha vertical  */
+    .lamina {
+      background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.22) 0%,
+        rgba(244,114,182,0.18) 35%,
+        rgba(251,191,36,0.14) 65%,
+        rgba(255,255,255,0.20) 100%
+      );
+      backdrop-filter: blur(10px) saturate(1.6);
+      -webkit-backdrop-filter: blur(10px) saturate(1.6);
+      border: 1.5px solid rgba(255,255,255,0.45);
+      /* borde interior tipo brillo laminado */
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.55),
+        inset 0 -1px 0 rgba(219,39,119,0.25),
+        0 8px 32px rgba(219,39,119,0.45);
+    }
+
+    /* ════ BOTÓN UBICACIÓN ════
+       Posición: lado derecho, al nivel del rostro de la abeja
+       El rostro ocupa ~8%–32% del alto → centro ~20% top
+       En 100vh con max 780px → top ~20% del stage             */
     #btn-ubicacion {
       position: absolute;
-      top: 18px;
-      right: 14px;
+      top: 19%;          /* centro del rostro de la abeja */
+      right: 12px;
       z-index: 40;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 4px;
-      width: 72px;
-      height: 72px;
-      background: linear-gradient(145deg, var(--pink) 0%, var(--pink-dark) 100%);
+      gap: 5px;
+      width: 76px;
+      height: 76px;
+      border-radius: 20px;
       color: #fff;
       font-family: 'Nunito', sans-serif;
       font-weight: 900;
-      font-size: 0.58rem;
+      font-size: 0.6rem;
       text-align: center;
-      line-height: 1.2;
-      border-radius: 18px;
-      cursor: pointer;
-      box-shadow: 0 4px 20px rgba(219,39,119,0.65), 0 0 0 3px rgba(255,255,255,0.25);
+      line-height: 1.25;
       text-decoration: none;
       letter-spacing: 0.02em;
-      transition: transform 0.15s, box-shadow 0.15s;
+      cursor: pointer;
       -webkit-tap-highlight-color: transparent;
+      /* empieza invisible */
       opacity: 0;
       pointer-events: none;
+      transform: scale(0.5);
+      transition: transform 0.15s, opacity 0.15s;
+    }
+
+    /* Capa de color sólido rosa debajo del laminado
+       para que no se pierda el color aunque el fondo cambie */
+    #btn-ubicacion::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background: linear-gradient(145deg, #f472b6 0%, #db2777 100%);
+      z-index: -1;
     }
 
     #btn-ubicacion.visible {
       opacity: 1;
       pointer-events: all;
-      animation: btn-pop 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+      animation: btn-pop 0.45s cubic-bezier(0.34,1.56,0.64,1) forwards,
+                 glow-punzante 2s ease-in-out 0.5s infinite;
     }
 
+    /* Pop de entrada */
     @keyframes btn-pop {
-      from { transform: scale(0.5); opacity: 0; }
+      from { transform: scale(0.4); opacity: 0; }
       to   { transform: scale(1);   opacity: 1; }
     }
 
-    #btn-ubicacion:active {
-      transform: scale(0.93);
-      box-shadow: 0 2px 10px rgba(219,39,119,0.4);
+    /* Efecto punzante: glow rosa que pulsa */
+    @keyframes glow-punzante {
+      0%, 100% {
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.55),
+          inset 0 -1px 0 rgba(219,39,119,0.25),
+          0 0 0   4px rgba(244,114,182,0),
+          0 0 18px 4px rgba(219,39,119,0.5),
+          0 8px 32px rgba(219,39,119,0.4);
+      }
+      50% {
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.55),
+          inset 0 -1px 0 rgba(219,39,119,0.25),
+          0 0 0  10px rgba(244,114,182,0.25),
+          0 0 32px 8px rgba(219,39,119,0.8),
+          0 8px 40px rgba(219,39,119,0.6);
+      }
     }
 
-    #btn-ubicacion svg { flex-shrink: 0; }
-    #btn-ubicacion span { display: block; }
+    #btn-ubicacion:active {
+      transform: scale(0.91) !important;
+      animation: none !important;
+    }
 
-    /* Panel inferior: fecha + contador */
+    #btn-ubicacion svg { flex-shrink: 0; drop-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+    #btn-ubicacion .btn-txt { display: block; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+
+    /* ════ FECHA VERTICAL — columna izquierda ════
+       Posicionada al mismo nivel que el botón (top: 19%)
+       Texto apilado en vertical, escritura de arriba a abajo  */
+    #fecha-vertical {
+      position: absolute;
+      top: 19%;
+      left: 10px;
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 10px 8px;
+      border-radius: 16px;
+      width: 52px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    #fecha-vertical.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Capa rosa sólida de respaldo */
+    #fecha-vertical::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(219,39,119,0.75) 0%, rgba(168,85,247,0.65) 100%);
+      z-index: -1;
+    }
+
+    .fv-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .fv-num {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 1.65rem;
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.55);
+      line-height: 1;
+    }
+
+    .fv-label {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 0.5rem;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 1px;
+    }
+
+    .fv-divider {
+      width: 28px;
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .fv-hora {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: var(--yellow);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.55);
+      line-height: 1;
+      text-align: center;
+    }
+
+    .fv-hora-label {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 0.48rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 1px;
+    }
+
+    /* ════ PANEL INFERIOR: CONTADOR REGRESIVO ════
+       Elevado con safe-area para no quedar bajo barra de nav  */
     #ui-overlay {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
       z-index: 30;
-      /* env(safe-area-inset-bottom) cubre la barra de navegación en iOS/Android */
-      padding: 14px 14px calc(20px + env(safe-area-inset-bottom, 0px));
-      background: linear-gradient(to top, rgba(20,4,50,0.90) 0%, rgba(20,4,50,0.0) 100%);
+      padding: 16px 10px calc(36px + env(safe-area-inset-bottom, 16px));
+      background: linear-gradient(to top,
+        rgba(15,2,40,0.93) 0%,
+        rgba(15,2,40,0.70) 55%,
+        rgba(15,2,40,0.0)  100%
+      );
       display: flex;
       flex-direction: column;
+      align-items: center;
       gap: 8px;
       opacity: 0;
       pointer-events: none;
@@ -241,61 +393,15 @@
       pointer-events: all;
     }
 
-    /* ── Event date header ── */
-    #event-date-header {
-      text-align: center;
-      line-height: 1.35;
-    }
-
-    #event-date-header .ed-title {
-      font-family: 'Nunito', sans-serif;
-      font-weight: 900;
-      font-size: 0.78rem;
-      color: var(--yellow);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      display: block;
-      margin-bottom: 3px;
-    }
-
-    #event-date-header .ed-date {
-      font-family: 'Nunito', sans-serif;
-      font-weight: 900;
-      font-size: 1.25rem;
-      color: #fff;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.7);
-      display: block;
-    }
-
-    #event-date-header .ed-time {
-      font-family: 'Nunito', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      color: var(--pink);
-      display: block;
-      margin-top: 2px;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
-    }
-
-    #event-date-header .ed-divider {
-      display: block;
-      width: 56px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--yellow), transparent);
-      margin: 6px auto 4px;
-      border-radius: 2px;
-    }
-
     /* ── Countdown sublabel ── */
     #cd-label-top {
       text-align: center;
       font-family: 'Quicksand', sans-serif;
       font-weight: 700;
-      font-size: 0.65rem;
-      color: rgba(255,255,255,0.7);
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.75);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: -2px;
+      letter-spacing: 0.12em;
     }
 
     /* ── Countdown ── */
@@ -303,53 +409,81 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 7px;
+      gap: 6px;
+      width: 100%;
     }
 
     .cd-block {
       display: flex;
       flex-direction: column;
       align-items: center;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.35);
-      border-radius: 12px;
-      padding: 7px 12px;
-      min-width: 58px;
-      backdrop-filter: blur(8px);
+      border-radius: 14px;
+      padding: 8px 0;
+      flex: 1;
+      max-width: 72px;
+      /* efecto laminado en los bloques del contador */
+      background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.18) 0%,
+        rgba(244,114,182,0.15) 50%,
+        rgba(255,255,255,0.18) 100%
+      );
+      backdrop-filter: blur(10px) saturate(1.5);
+      -webkit-backdrop-filter: blur(10px) saturate(1.5);
+      border: 1.5px solid rgba(255,255,255,0.40);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.5),
+        0 4px 16px rgba(219,39,119,0.3);
     }
+
+    /* Respaldo de color para cd-block */
+    .cd-block::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      background: rgba(100,20,80,0.55);
+      z-index: -1;
+    }
+
+    .cd-block { position: relative; }
 
     .cd-num {
       font-family: 'Nunito', sans-serif;
       font-weight: 900;
-      font-size: 1.85rem;
+      font-size: 2.4rem;
       color: var(--yellow);
       line-height: 1;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+      text-shadow:
+        0 0 12px rgba(251,191,36,0.8),
+        0 2px 10px rgba(0,0,0,0.6);
     }
 
     .cd-label {
-      font-size: 0.6rem;
-      color: rgba(255,255,255,0.9);
+      font-size: 0.58rem;
+      color: rgba(255,255,255,0.92);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-top: 3px;
+      letter-spacing: 0.1em;
+      margin-top: 4px;
     }
 
     .cd-sep {
       font-family: 'Nunito', sans-serif;
       font-weight: 900;
-      font-size: 1.6rem;
+      font-size: 1.8rem;
       color: var(--pink);
-      margin-bottom: 12px;
+      margin-bottom: 14px;
+      text-shadow: 0 0 10px rgba(244,114,182,0.7);
       animation: blink-sep 1s step-end infinite;
+      flex-shrink: 0;
     }
 
     @keyframes blink-sep {
       0%, 100% { opacity: 1; }
-      50%       { opacity: 0.2; }
+      50%       { opacity: 0.15; }
     }
 
-    /* ── Celebration ended message ── */
+    /* ── Mensaje post-evento ── */
     #msg-finished {
       display: none;
       text-align: center;
@@ -360,31 +494,19 @@
       color: var(--yellow);
       font-family: 'Nunito', sans-serif;
       font-weight: 900;
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       text-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
 
-    /* ── Sparkle confetti ── */
-    .sparkle {
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-      animation: sparkle-float 2.5s ease-in-out infinite;
-    }
-
-    @keyframes sparkle-float {
-      0%   { transform: translateY(0) scale(1);   opacity: 0.8; }
-      50%  { transform: translateY(-12px) scale(1.3); opacity: 1; }
-      100% { transform: translateY(0) scale(1);   opacity: 0.8; }
-    }
-
-    /* ── Responsive on small phones ── */
-    @media (max-height: 640px) {
-      .cd-num   { font-size: 1.4rem; }
-      .cd-block { padding: 5px 9px; min-width: 48px; }
-      #event-date-header .ed-date { font-size: 1.05rem; }
-      #event-date-header .ed-time { font-size: 0.85rem; }
-      #btn-ubicacion { width: 62px; height: 62px; top: 12px; right: 10px; }
+    /* ── Responsive pantallas muy pequeñas ── */
+    @media (max-height: 620px) {
+      .cd-num      { font-size: 1.8rem; }
+      .cd-block    { padding: 6px 0; }
+      .cd-sep      { font-size: 1.4rem; }
+      #btn-ubicacion { width: 64px; height: 64px; top: 16%; right: 8px; }
+      #fecha-vertical { top: 16%; left: 7px; width: 46px; }
+      .fv-num      { font-size: 1.35rem; }
+      .fv-hora     { font-size: 0.95rem; }
     }
   </style>
 </head>
@@ -411,30 +533,40 @@
       <source src="assets/animacion.mp4" type="video/mp4" />
     </video>
 
-    <!-- Botón flotante ubicación — esquina superior derecha -->
-    <a id="btn-ubicacion"
+    <!-- ── Fecha vertical — columna izquierda al nivel del rostro ── -->
+    <div id="fecha-vertical" class="lamina">
+      <div class="fv-item">
+        <span class="fv-num">5</span>
+        <span class="fv-label">Jul</span>
+      </div>
+      <div class="fv-divider"></div>
+      <div class="fv-item">
+        <span class="fv-num">2026</span>
+        <span class="fv-label">año</span>
+      </div>
+      <div class="fv-divider"></div>
+      <div class="fv-item">
+        <span class="fv-hora">3PM</span>
+        <span class="fv-hora-label">hora</span>
+      </div>
+    </div>
+
+    <!-- ── Botón ubicación — lado derecho al nivel del rostro ── -->
+    <a id="btn-ubicacion" class="lamina"
        href="https://share.google/217zwY3bvhmzM4k7h"
        target="_blank"
        rel="noopener noreferrer">
-      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
         <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/>
       </svg>
-      <span>Ver<br>ubicación</span>
+      <span class="btn-txt">Ver<br>ubicación</span>
     </a>
 
-    <!-- Panel inferior: fecha + contador -->
+    <!-- ── Panel inferior: contador regresivo ── -->
     <div id="ui-overlay">
 
-      <!-- Fecha y hora del evento -->
-      <div id="event-date-header">
-        <span class="ed-title">🐝 La fiesta es el</span>
-        <span class="ed-date">Domingo 5 de Julio de 2026</span>
-        <span class="ed-time">🕒 3:00 PM · Fracc. Los Encinos</span>
-        <span class="ed-divider"></span>
-      </div>
+      <p id="cd-label-top">⏳ faltan para la fiesta...</p>
 
-      <!-- Contador regresivo -->
-      <p id="cd-label-top">⏳ faltan...</p>
       <div id="countdown-wrap">
         <div class="cd-block">
           <span class="cd-num" id="cd-days">00</span>
@@ -481,6 +613,7 @@
   const videoAnim    = document.getElementById('video-anim');
   const uiOverlay    = document.getElementById('ui-overlay');
   const btnUbicacion = document.getElementById('btn-ubicacion');
+  const fechaVertical = document.getElementById('fecha-vertical');
   const msgFinished  = document.getElementById('msg-finished');
   const cdDays       = document.getElementById('cd-days');
   const cdHours      = document.getElementById('cd-hours');
@@ -548,6 +681,7 @@
     setTimeout(() => {
       uiOverlay.classList.add('visible');
       btnUbicacion.classList.add('visible');
+      fechaVertical.classList.add('visible');
       updateCountdown();
       setInterval(updateCountdown, 1000);
     }, 6500);
